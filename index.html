@@ -1,0 +1,591 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+<head>
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<title>コラる！|素材を選んでお手軽コラ画像作成！：サンプル用</title>
+<meta name="keywords" content="サンプル用" />
+<meta name="description" content="サンプル用" />
+<link href="css/style.css" rel="stylesheet" type="text/css" />
+<link href="css/jquery.Jcrop.css" rel="stylesheet"  type="text/css" />
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+<script type="text/javascript" src="js/jquery.Jcrop.js"></script>
+<script type="text/javascript"> 	
+  jQuery(function($){			  
+		////////////////////////////////
+		//////作成画面//////////////////
+		////////////////////////////////
+		var limitBox  = parseInt($("#imgBox").css("height"))/120;
+		var i = 1;
+		var maxi = 1;
+		var sozaiName = null;
+		var reUp = 0;
+		//api
+		var jcrop_api;
+		
+		//素材
+		var sozaiLink = ["sozai/don.png","sozai/bokaboka.png","sozai/byun.png","sozai/goo.png","sozai/ohoho.png","sozai/ooo.png","sozai/button.png","sozai/youtube.png","sozai/vuvuvu.png"]
+		var sozaiValue = ["ドン","ボカボカ","ビュン","ゴオオ","オホホ","オオオ","再生ボタン","某再生バー","ｳﾞｳﾞｳﾞ"]
+		//ｼｭｺﾞｲﾉﾉﾝｵﾉﾉﾉｵｵｵｫｫｵｵｵ↑↓
+		$("[id*='btn']").on('click',function(){
+			i = maxi;
+			var idBtn = $(this).attr("id");
+			btnNumber = parseInt(idBtn.match(/\d+/));
+			//素材設定
+			var sozai = sozaiLink[btnNumber-1];
+			var value = sozaiValue[btnNumber-1];
+			
+			$("div#locatedpoint"+i).after("<div id='locatedpoint"+(i+1)+"' style='cursor: default;position: absolute;overflow: hidden;'><img src='"+sozai+"' id='sozai"+(i+1)+"'></div>");
+			
+			$("div#layerBox"+i).after("<div id='layerBox"+(i+1)+"'><input type='button' id='layerButton"+(i+1)+"'  value='"+value+"' ><input type='button' id='batu"+(i+1)+"'  value='☓'  disabled><br><input type='range' id='range"+(i+1)+"' min='0' max='360' value='180' step='1' value='0'/></div><br>");
+			
+			$("div#dateBox"+i).after("<div id='dateBox"+(i+1)+"' style='display:none;'><p><input type='text' name='x1["+(i)+"]' size='2'/><input type='text' name='y1["+(i)+"]' size='2' /><input type='text' name='x2["+(i)+"]' size='2'><input type='text' name='y2["+(i)+"]' size='2'/><input type='text' name='sizex["+(i)+"]' size='2'/><input type='text' name='sizey["+(i)+"]' size='2'/><input type='text' name='sozaiNum["+(i)+"]' size='2' value='"+(btnNumber)+"'/><input type='text' name='angel["+(i)+"]' size='2' value='0'/></p></div>");
+			
+			$("#batu"+i).prop("disabled",false);/*非表示に*/
+					i++;
+					maxi++;
+			//素材初期位置
+			$('#FUCKarea').Jcrop({
+				  setSelect:[0,0,46,50]
+			});
+
+			//LayerBox位置
+			var position = $("#lastLayerBox").offset().top;
+			$("#buttonArea").animate({
+				scrollTop : position, 
+				duration : 1
+			}, {
+				queue : false
+			});
+
+		});
+		//Layer削除
+		$("body").on("click","[id*='batu']",function(event){			
+			var reidName = $(this).attr("id");
+			var layerNumber = parseInt(reidName.match(/\d+/));
+			
+			if(!(layerNumber == 1)){
+			reidName = "layerBox"+layerNumber;
+			$("#"+reidName).remove();
+			reidName = "locatedpoint"+layerNumber;
+			$("#"+reidName).remove();
+			reidName = "sozai"+layerNumber;
+			$("#"+reidName).remove();
+			reidName = "dateBox"+layerNumber;
+			$("#"+reidName).remove();
+			}else{
+				$("input[name='sozaiNum[0]']").val(0);
+				reidName = "layerBox"+layerNumber;
+				$("#"+reidName).remove();
+				reidName = "sozai"+layerNumber;
+				$("#"+reidName).remove();
+			}
+			//Layer削除後の選択位置は？
+			if(layerNumber == i || layerNumber == 1){
+				layerX1 = $("input[name='x1["+(maxi-1)+"]']").val();
+				layerY1 = $("input[name='y1["+(maxi-1)+"]']").val();
+				layerX2 = $("input[name='x2["+(maxi-1)+"]']").val();
+				layerY2 = $("input[name='y2["+(maxi-1)+"]']").val();	
+				jcrop_api.animateTo([layerX1,layerY1,layerX2,layerY2]);
+			}
+			i = maxi;
+			reidName = null;
+			layerNumber = null;		
+		});
+		//選択確認
+		var layerButtonNumber = 0;
+		var loopAnime = 0;
+		$("body").on("mouseover","[id*='layerButton']",function(event){
+			var idLayerButton = $(this).attr("id");
+		    layerButtonNumber = parseInt(idLayerButton.match(/\d+/));
+			
+			loopAnime = setInterval(function(){ $("#sozai" + layerButtonNumber).fadeOut(50);
+			$("#sozai" + layerButtonNumber).fadeIn(50);},100);
+			
+			
+		}).mouseout(function(event){
+			clearInterval(loopAnime);
+			$("#sozai" + layerButtonNumber).stop(true,true);
+			$("#sozai" + layerButtonNumber).fadeIn(10);
+		});		
+		//レイヤー切り替え
+		$("body").on("click","[id*='layerButton']",function(event){
+			var idName = $(this).attr("id");
+			var layerNumber2 = parseInt(idName.match(/\d+/));
+			i = layerNumber2;
+			
+			//切り替え初期位置
+			var layerX1 = $("input[name='x1["+(layerNumber2-1)+"]']").val();
+			var layerY1 = $("input[name='y1["+(layerNumber2-1)+"]']").val();
+			var layerX2 = $("input[name='x2["+(layerNumber2-1)+"]']").val();
+			var layerY2 = $("input[name='y2["+(layerNumber2-1)+"]']").val();
+			//位置変更
+			/*$("#FUCKarea").Jcrop({
+				//setSelect: [layerX1,layerY1,layerX2,layerY2]
+			});*/
+			//切り替え位置へ
+			jcrop_api.animateTo([layerX1,layerY1,layerX2,layerY2]);
+			
+			idName = null;
+			layerNumber2 = null;
+		});	
+		
+		function updatePreview(c)
+		{
+			//var areaOffset = $('#locatedarea').offset();
+			
+			var x1 = c.x;
+			var y1 = c.y;
+			var x2 = c.x2;
+			var y2 = c.y2;
+			var w = c.w;
+			var h = c.h;
+			$("input[name='x1["+(i-1)+"]']").val(x1);
+			$("input[name='y1["+(i-1)+"]']").val(y1);
+			$("input[name='x2["+(i-1)+"]']").val(x2);
+			$("input[name='y2["+(i-1)+"]']").val(y2);
+			$("input[name='sizex["+(i-1)+"]']").val(w);
+			$("input[name='sizey["+(i-1)+"]']").val(h);
+			
+			document.getElementById("x2").onchange();
+			
+			if(i==1){
+			$('#locatedpoint'+i).css({top:(y1),left:(x1),display:'block'});
+			}else{
+			$('#locatedpoint'+i).css({top:(y1),left:(x1)});
+			}
+			
+			$('#sozai'+i).css("width",w);
+			$('#sozai'+i).css("height",h);
+		};
+		function updatePreview2(c)
+		{
+			var x1 = c.x;
+			var y1 = c.y;	
+			var w = c.w;
+			var h = c.h;	
+			
+		};
+		
+		//素材選択ボタン関連
+		$("[id*='btn']").hover(function(){
+			var idBtn = $(this).attr("id");
+			btnNumber = parseInt(idBtn.match(/\d+/));
+			$("#btn" + btnNumber).fadeTo("fast",0.5);
+		},function(){
+			$("#btn" + btnNumber).fadeTo("fast",1);
+		});
+		
+		
+		$("#top,#bottom").click(function(){
+			var TopBottom = $(this).attr("id");
+			if(TopBottom == "bottom"){
+				if(limitBox == 1){
+					$("#imgBox:not(:animated)").animate({
+						"margin-top": "0px" },"fast","swing");
+					limitBox = parseInt($("#imgBox").css("height"))/120;
+				}else{
+					$("#imgBox:not(:animated)").animate({
+						"margin-top": parseInt($("#imgBox").css("margin-top")) - parseInt($("#TOPimgBox").css("height"))+"px"
+					},"fast","swing");
+					limitBox--;
+				}
+			}else{
+				if(limitBox == 3){
+					$("#imgBox:not(:animated)").animate({
+						"margin-top": -((limitBox-1) * parseInt($("#TOPimgBox").css("height")))+"px"
+					},"fast","swing");
+					limitBox = 1;					
+				}else{
+					$("#imgBox:not(:animated)").animate({
+						"margin-top":parseInt($("#imgBox").css("margin-top")) + parseInt($("#TOPimgBox").css("height"))+"px"
+					},"fast","swing");
+					limitBox++;
+				}
+			}							
+		});
+		
+		$("body").on('change input click',"input[id*='range']",function(){
+			var angelId  = $(this).attr("id");
+			var angelNum = parseInt(angelId.match(/\d+/));
+			var angel = $("#range"+angelNum).val() - 180;
+			$("input[name='angel["+(angelNum-1)+"]']").val(angel);		
+			$("#locatedpoint" + angelNum).css('transform','rotate('+angel+'deg)');	
+		});
+
+		//画像表示
+		$("#my_img").on("change",function(event){
+			var Width = 0;
+			var Height = 0;
+			var file = $(this).prop('files')[0];
+			var fileReader = new FileReader();
+			var fileName = $("#my_img").val();
+			var extension = fileName.substring(fileName.lastIndexOf("."),(fileName.length)+(fileName.lastIndexOf(".")));
+			var fileSize = parseInt(file.size/1024);
+			
+			if(!(extension == ".jpg" || extension == ".gif" || extension == ".png" || extension == ".PNG" || extension == ".JPEG" ||extension == "")){
+				$("#my_img").val("")
+				alert( "エラー ：ファイルの拡張子(.jpg .png .gif は可)を見なおしてください. ");
+				
+				return;
+			}
+			
+			if(!(fileSize < 1024)){
+				$("#my_img").val("")
+				alert( "エラー ：ファイルのサイズが大きすぎます. 1MB以下のファイルのみご利用いただけます.");
+				
+				return;
+			}
+			
+						
+			if(!this.files.length){//ファイルがなかったら
+				return;
+			}
+
+			fileReader.readAsDataURL(file);	
+			fileReader.onload = function(){
+				$('#target').attr('src',fileReader.result);
+				setTimeout(function(){
+				if(!(typeof target.naturalWidth == 'undefined')){
+					//FireFox safari chrome 用
+					Width  = parseInt(target.naturalWidth);
+					Height = parseInt(target.naturalHeight);
+					//alert("確認1");
+				}else if(!(typeof target.runtimeStyle == 'undefined')){
+					//IE用
+					imgSize = target.runtimeStyle; 
+					Width   = parseInt(imgSize.width);
+					Height  = parseInt(imgSize.height);
+				}else{
+					//opera(クソ)用
+					mem = {w: target.width, h:target.height};
+					image.removeAttr("width");
+					image.removeAttr("height");
+					Width  = parseInt(target.width);
+					Height = parseInt(target.height);
+					target.width = mem.w;
+					target.height = mem.h;
+					
+				}
+				
+				if((Width > 640) || (Height > 640)){
+					if(Width >= Height){
+						Height = 640 / Width * Height;
+						Width = 640;
+					}else{
+						Width = 640 / Height * Width;
+						Height = 640;
+					}
+					//alert("確認2"+Width+"と"+Height);
+				}else{
+					//alert("確認3"+Width+"と"+Height);
+				}
+				//alert(Width+"と"+Height);
+					$('#target,#FUCKarea').css('width',Width+'px');
+					$('#locatedarea,#buttonArea,#FUCKarea').css('height',Height+'px');
+					$('#FUCKarea').Jcrop({
+						bgFade: true,
+						onChange: updatePreview2,
+						onSelect: updatePreview,
+						setSelect:[100,100,50,50]
+						  //onRelease: hasReleased
+					},function(){
+						jcrop_api = this;
+					});
+				//mainArea表示
+				var selectANDimgBoxHeight = $('#selectANDimgBox').css('height');
+				$('#editArea').css('height',(Height+selectANDimgBoxHeight)+'px')
+				$('#editArea').slideDown(500);
+				$('#aboutArea').slideUp(500);
+				$('#sakusei').slideDown(500);
+				$('#imgSelectButton').attr('src','sozai/reSelectButton.jpg');
+				
+				reUp = 1;
+				//$("#my_img").val("");
+				
+				},50);
+			}
+			
+		});
+		var duringMake = 0;//作成中フラグ
+		$('#sousin').on('click',function(event){
+			event.preventDefault();
+			var originalUp = $("#originalUp");
+			//var formFile = $("#form").get()[0];
+			var originalUpData = new FormData(originalUp[0]);
+			//var formFile = new FormData(form);
+			//var formData = new FromData(form);
+			$('#duringMake').attr('src','img/maketyu.gif');
+			duringMake = 1;//作成中送信ボタン無効化
+			$('#sakusei').fadeTo('fast',1);//作成中ボタン半透明化無効
+			$.ajax({
+				 	url:'php/resizeUp.php',
+					type:'post',
+					data:originalUpData,
+					processData: false,
+					contentType: false,
+					//dataType: 'json',
+					timeout:10000}).done(function(result,textStatus,xhr){
+						$('#original').val(result);
+						var form = $("#form");
+						var formData= form.serialize();
+						$.ajax({
+								url:'php/result.php',
+								type:'post',
+								data:formData,
+								timeout:10000}).done(function(result,textStatus,xhr){
+									$('#result').attr('src','php/'+result);
+									setTimeout(function(){
+										$('#resultBox').slideDown(500);
+										$('#editArea').slideUp(500);
+										$('#sakusei').slideUp(500);
+										$('#duringMake').attr('src','img/space.png');
+										$('#tweetImgLink').val(result);
+										duringMake = 0;//作成終了作成ボタン有効化
+									},50);
+									
+								}).fail(function(xhr,textStatus,error){
+									alert('エラー');
+							});
+					}).fail(function(xhr,textStatus,error){
+					 	alert('エラー');
+				});
+		});
+		
+		/*$('#imgSelectButtonBox').on('click',function(){
+			$('#my_img').click();
+		});*/
+		$('#imgSelectButtonBox').hover(function(){
+			$('#imgSelectButtonBox:not(:animated)').fadeTo('fast',0.5);
+		},function(){
+			$('#imgSelectButtonBox').fadeTo('fast',1);
+		});
+		$('.menuButton').hover(function(){
+			$('.menuButton:not(:animated)').fadeTo('fast',0.5);
+			$('.menuButton').animate({'background-color':'#086984'},'fast','swing');
+		},function(){
+			$('.menuButton').fadeTo('fast',1);
+			$('.menuButton').css('background-color','');
+		});
+		
+		$('#imgSelectButtonBox').on('click',function(){
+			if(reUp == 1){
+				$('#editArea').slideUp(500);
+				$('#resultBox').slideUp(500);
+				$('#aboutArea').slideDown(500);
+				$("#my_img").val("");
+				jcrop_api.destroy();
+				$('#locatedarea').append("<div id='FUCKarea'><img src=''  id='target'><div id='locatedpoint1' style='transform: rotate( 0deg );'><img src='sozai/mask.png'  width='187'  height='210' id='sozai1' ></div></div>");
+				$('#buttonArea').replaceWith("<div id='buttonArea'><div id='layerBox1'><input type='button' id='layerButton1' value='ｼｬｱのｱﾚ' style='margin: 5px 5px 0px 7px;'><input type='button' id='batu1'  value='☓' disabled><br><input type='range' id='range1' min='0' max='360' value='180' step='1'/></div><br><div id='lastLayerBox'></div></div>");
+				$('#my_img').click();
+				$('#date').replaceWith("<div id='date'><div id='dateBox1' style='display:none;'><p><input type='text' name='x1[0]' size='2' /><input type='text' name='y1[0]' size='2' /><input type='text' name='x2[0]' size='2'  id='x2' onChange='checker()'><input type='text' name='y2[0]' size='2' /><input type='text' name='sizex[0]' size='2'/><input type='text' name='sizey[0]' size='2'/><input type='text' name='sozaiNum[0]' size='2' value='1'/><input type='text' name='angel[0]' size='2' value='0'/></p></div></div>");
+				$('#sakusei').slideUp(500);
+				reUp = 0;
+				i = 1;
+				maxi = 1;
+			
+			}else{
+				$('#my_img').click();
+			}
+			
+		});
+		
+		
+		var aboutInterval = setInterval(about,2000);
+		var aboutCount = 0;
+		
+		function about(){
+			if(aboutCount == 0){
+				$('#aboutImg:not(:animated)').animate({'margin-left':'-825px'},500);
+				aboutCount++;
+			}else{
+				$('#aboutImg').animate({'margin-left':'0px'},500);
+				aboutCount = 0;
+			}
+			
+		}
+
+		$('#tweet').hover(function(){
+			$('#twBird:not(:animated)').animate({'margin-left':'35px'},500,'swing');
+			$('#twDo:not(:animated)').animate({'opacity':'show'},500,'swing');
+		},function(){
+			
+		});
+		
+		$('#tweet').click(function(){
+			window.open("about;blank","Tweet",'width=500,height=400');
+			$('#tweetImg').click();
+			
+		});
+		
+		$('#sakusei').click(function(){
+			if(duringMake == 0){
+				$('#sousin').click();
+			}
+		});
+		$('#sakusei').hover(function(){
+			if(duringMake == 0){
+				$('#sakusei:not(:animated)').fadeTo('fast',0.5);
+			}
+		},function(){
+			if(duringMake == 0){
+				$('#sakusei').fadeTo('fast',1);
+			}
+		});
+
+  });
+ 
+
+
+</script>
+
+<script type="text/javascript">
+function checker(){
+		document.form.sousin.disabled=false;
+	}
+</script>
+
+</head>
+<body>
+
+<div id="content">
+<div id="menuBar">
+<div style="height:75px; overflow:hidden;">
+<div id="menuBarButtonRight"></div>
+<img src="img/rogo.png" height="65px" style="margin:5px 5px 5px 295px;">
+<div id="menuBarButtonLeft"></div>
+</div>
+<div id="menuBarButtonRightBottom"></div>
+<div id="menuBarButtonLeftTop"></div>
+</div>
+<p></p>
+
+<div id="aboutArea">
+<div id="makekora"><img src="img/makekora.png"></div>
+<div id="aboutImg">
+<img src="img/ex1.jpg" class="aboutimg">
+<img src="img/ex2.jpg" class="aboutimg">
+</div>
+</div>
+
+<p></p>
+<div id="imgSelectButtonBox">
+<div style="height:75px; overflow:hidden;">
+<div id="imgSelectButtonRight"></div>
+<input type="image" src="sozai/imgSelectButton.jpg" id="imgSelectButton"    maxlength="7" alt="ファイル選択"/>
+<div id="imgSelectButtonLeft"></div>
+</div>
+<div id="imgSelectButtonRightBottom"></div>
+<div id="imgSelectButtonLeftTop"></div>
+</div>
+<div align="center">
+<form enctype="multipart/form-data" method="post" name="originalUp" id="originalUp" >
+<input name="my_img"  type="file" id="my_img"    maxlength="7" />
+</form>
+</div>
+
+
+
+
+<div id="mainArea"  style="margin-bottom:10px;">
+<div id="editArea"  style="margin-top:30px;">
+<div id="selectimgBox">
+<div id="spaceimgBox"></div>
+
+<div id="selectANDimgBox">
+<input type="image" src="img/ue.jpg" id="top" alt="↑">
+<div id="TOPimgBox">
+<div id="imgBox">
+<div class="sozaiButtonBox">
+<input type="image" src="sozaisam/don.jpg" id="btn1" style="margin:0px 8px 0px 10px;"> 
+<input type="image" src="sozaisam/bokaboka.jpg" id="btn2" >
+<input type="image" src="sozaisam/byun.jpg" id="btn3" > 
+<input type="image" src="sozaisam/vuvuvu.png" id="btn4"> 
+
+</div>
+<div class="sozaiButtonBox">
+<input type="image" src="sozaisam/goo.jpg" id="btn5" >
+<input type="image" src="sozaisam/ohoho.jpg" id="btn6" >
+<input type="image" src="sozaisam/ooo.jpg" id="btn7"> 
+<input type="image" src="sozaisam/button.png" id="btn8"> 
+</div>
+<div class="sozaiButtonBox">
+<input type="image" src="sozaisam/youtube.png" id="btn9"> 
+</div>
+
+</div>
+</div>
+<input type="image" src="img/sita.jpg" id="bottom" alt="↓">
+</div>
+</div>
+
+<div id='buttonArea' style="height:100px;">
+<div id="layerBox1"><input type="button" id="layerButton1"  value="ドン" style="margin: 5px 5px 0px 7px;"><input type="button" id="batu1"  value="☓" disabled><br><input type="range" id="range1" min="0" max="360" value="180" step="1"/></div><br>
+<div id="lastLayerBox"></div>
+</div>
+
+<div id="locatedarea" align="center">
+<div id='FUCKarea'>
+<img src=''  id='target'>
+<div id='locatedpoint1' style='transform: rotate( 0deg );'>
+<img src='sozai/don.png'  width='374'  height='318' id='sozai1' >
+</div>
+</div>
+</div>
+<div align="center"><a href="exsample.html" target="使い方" onClick="window.open('exsample.html', '使い方', 'width=500,height=850,scrollbars=1'); return false;">使い方</a></div>
+</div>
+
+<div align="center">
+<form  enctype="multipart/form-data" method="post" name="form" id="form">
+<div id="date">
+<div id="dateBox1" style='display:none;'>
+<p>
+<input type="text" name="x1[0]" size="2" />
+<input type="text" name="y1[0]" size="2" />
+<input type="text" name="x2[0]" size="2"  id="x2" onChange="checker()">
+<input type="text" name="y2[0]" size="2" />
+<input type="text" name="sizex[0]" size="2"/>
+<input type="text" name="sizey[0]" size="2"/>
+<input type="text" name="sozaiNum[0]" size="2" value="1"/>
+<input type="text" name="angel[0]" size="2" value="0"/>
+</p>
+</div>
+</div>
+<input type="text" id="original" name="original" size="2" style="display:none;"/>
+<p><input type="submit" value="作成する"  id="sousin" disabled style="display:none;"></p>
+</form>
+<div id="sakusei"><img src="img/space.png" id="duringMake"></div>
+</div>
+</div>
+
+
+
+<div align="center" id='resultBox'>
+<div id="resultDisplay">
+<div style="height:75px; overflow:hidden;">
+<div id="resultDisplayRight"></div>
+<img src="img/make.png" height="75px" style="margin:0px 0px 0px 0px;">
+<div id="resultDisplayLeft"></div>
+</div>
+<div id="resultDisplayRightBottom"></div>
+<div id="resultDisplayLeftTop"></div>
+</div>
+<p></p>
+<img src=''  id='result'>
+<p></p>
+<form  action="php/login.php" enctype="multipart/form-data" method="post" name="tweetForm" id="tweetForm" target="Tweet">
+<input type="text" id="tweetImgLink" name="tweetImgLink" size="2" style="display:none;"/>
+<input type="submit" value="Tweet"  id="tweetImg" style="display:none;">
+</form>
+<div id="tweet">
+<img src="img/tw2.png" id='twBird' style="position:absolute; z-index:50; margin:0px 0px 0px 162px;"/>
+<img src="img/tw3.png" id='twDo' style="position:absolute; z-index:45; margin:0px 0px 0px 120px; display:none;"/>
+<img src="img/tw1.png" style="position:relative; z-index:0;"/>
+</div>
+
+<p></p>
+<p></p>
+</div>
+</div>
+<div id="copy">© 2014 tetteke</div>
+</body>
+</html>

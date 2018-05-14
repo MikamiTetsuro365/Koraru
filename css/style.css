@@ -1,0 +1,427 @@
+@charset "utf-8";
+/* CSS Document */
+body{
+	background:#666;
+	}
+
+h1{
+	
+	font-weight:normal;
+	font-size:20px;	
+	border-left:20px solid #4169e1;
+	background-color:#ededed;
+	color:#000;
+	padding-left:10px;
+	margin: 10px 0px 10px 0px;
+	line-height: 1.5em;
+	
+	
+	}
+	
+
+
+#content
+{
+	width:960px;
+	margin:auto;
+	border:dotted 1px;
+	background:#FFF;
+}
+
+#main{
+	position:relative;
+	z-index:200;
+}
+
+#background
+{
+	width:960px;
+	margin:auto;
+	background:#FFF;
+	position:absolute;
+	z-index:0;
+}
+#backgroundBorderLeft
+{
+	width:10px;
+	height:200px;
+	background-color:#666;
+	float:left;
+}	
+
+ul{
+	padding: 0px 0px 0px 75px;
+}
+
+#copy{
+	
+	width:960px;
+	height:20px;
+	background-color:#000;
+	color:#FFF;
+	margin: auto;
+	text-align:right;
+	padding-right:5px;
+	padding-top:2px;
+	overflow:hidden;
+	
+}
+#copy a{
+	color:#FFF;
+}
+
+input[id*="layerButton"] {
+	font-size:100%;
+	Width: 80px;
+	height:30px;
+	margin: 5px 5px 0px 7px;
+	}
+	
+input[id*="batu"] {
+	font-size:100%;
+	Width:30px;	
+	height:30px;
+	}
+
+input{
+	font-size:150%;
+	}
+	
+#locatedpoint1 {
+	display: none;
+	cursor: default;
+	position: absolute;
+	overflow: hidden;
+}
+
+input[id*="btn"] {
+	background:#EEE;
+	border-top:3px solid #DDD;
+	border-left:3px solid #DDD;
+	border-right:3px solid #BBB;
+	border-bottom:3px solid #BBB;
+	color:#111;
+	margin:0px 10px 0px 10px;
+	}
+	
+.sozaiButtonBox{
+	height:106px;
+	width:640px;
+	float:left;
+	margin:7px 0px 7px 0px;
+	overflow:hidden;
+}
+
+	
+div[id*="layerBox"]{
+	background-color:#3a3a3a;
+	border-top:2px solid #DDD;
+	border-left:2px solid #DDD;
+	border-right:2px solid #BBB;
+	border-bottom:2px solid #BBB;
+}
+
+#string{
+
+	width:750;
+	
+	
+}
+
+#string p{
+	
+	margin:0;
+	text-indent:1em;
+	padding:5px 20px 10px 20px;	
+	line-height:130%;
+	
+}
+
+#stringtitle{
+	
+	line-height:35px;
+	font-size:large;
+	text-indent:3em;
+	font-weight:bold;
+	color:white;
+	height:35px;
+	background:url(../img/bana.png);	
+}
+
+#selectimgBox{
+	width:720px;
+	height:170px;
+}
+
+#top,#bottom{
+	background:#EEE;
+	border-top:3px solid #DDD;
+	border-left:3px solid #DDD;
+	border-right:3px solid #BBB;
+	border-bottom:3px solid #BBB;
+	position: relative;
+	color:#111;
+	width:640px;
+	height:19px;
+}
+
+#selectimgBox{
+	width:790px;
+	height:170px;
+}
+
+#top,#bottom{
+	background:#EEE;
+	border-top:3px solid #DDD;
+	border-left:3px solid #DDD;
+	border-right:3px solid #BBB;
+	border-bottom:3px solid #BBB;
+	position: relative;
+	color:#111;
+	width:640px;
+	height:19px;
+}
+
+#selectANDimgBox{
+	width:640px;
+	height:170px;
+	position: relative;
+	overflow: hidden;
+	background: #ccc;
+
+}
+
+#TOPimgBox{
+	width:620px;
+	height:120px;
+	overflow: hidden;
+	background: #ccc;
+
+}
+
+#imgBox{
+	width:620px;
+	height:360px;
+	background: #ccc;
+	margin:0;
+
+}
+
+#spaceimgBox{
+	float:left;
+	width:150px;
+	height:170px;
+	position: relative;
+	overflow: hidden;
+
+}
+#my_img{
+	display:none;
+}
+#imgSelectButton{
+	width:810px;
+	background-color:#FFF;
+	
+}
+#imgSelectButtonRight{
+	float:left;
+	width:65px;
+	height:68px;
+	background-color:#3997b2;
+	border-top:10px solid #FFF;
+	border-right:10px solid #086984;
+}
+#imgSelectButtonLeft{
+	float:right;
+	width:65px;
+	height:68px;
+	background-color:#3997b2;
+	border-top:10px solid #FFF;
+	border-left:10px solid #086984;
+}
+#imgSelectButtonRightBottom{
+	float:left;
+	width:65px;
+	height:1px;
+	border-top:10px solid #086984;
+	border-right:10px solid #FFF;
+}
+#imgSelectButtonLeftTop{
+	float:right;
+	width:65px;
+	height:1px;
+	border-top:10px solid #086984;
+	border-left:10px solid #FFF;
+}
+
+#mainArea{
+	width:790px;
+	margin-left:auto;
+	margin-right:auto;
+	position:relative;
+}
+#editArea{
+	width:790px;
+	display:none;
+}
+#locatedarea {
+	float:left;
+	width: 640px;
+	background: #ccc;
+	position: relative;
+	overflow: hidden;	
+}
+#FUCKarea {
+	position: relative;
+	overflow: hidden;
+}
+#buttonArea {
+	float:left;
+	width: 150px;
+	background: #ccc;
+	position:relative;
+	overflow-y: scroll;
+	overflow-x: hidden;
+}
+input[id*="range"]{
+	width: 120px;
+	position:relative;
+	margin:5px 5px 5px 5px;
+}
+input[id*="range"]::-moz-range-thumb{
+	width: 10px;
+	border-radius:5px 5px 5px 5px;
+}
+input[id*="range"]::-moz-range-track{
+	background: #ccc;
+}
+#sousin{
+	display:none;
+}
+#resultBox{
+	display:none;
+}
+#menuBar{
+	width:960px;
+	background-color:#3997b2;
+}
+
+.menuButton{
+	padding-left:5px;
+	border-left:5px solid #086984;
+}
+
+#menuBarButtonRight{
+	float:left;
+	width:65px;
+	height:68px;
+	background-color:#3997b2;
+	border-top:10px solid #FFF;
+	border-right:10px solid #086984;
+}
+#menuBarButtonLeft{
+	float:right;
+	width:65px;
+	height:68px;
+	background-color:#3997b2;
+	border-top:10px solid #FFF;
+	border-left:10px solid #086984;
+}
+#menuBarButtonRightBottom{
+	float:left;
+	width:65px;
+	height:1px;
+	border-top:10px solid #086984;
+	border-right:10px solid #FFF;
+}
+#menuBarButtonLeftTop{
+	float:right;
+	width:65px;
+	height:1px;
+	border-top:10px solid #086984;
+	border-left:10px solid #FFF;
+}
+#aboutArea{
+	width:825px;
+	height:464px;
+	background-color:#FFF;
+	margin-left:auto;
+	margin-right:auto;
+	position:relative;
+	overflow:hidden;
+}
+#aboutImg{
+	width:1650px;
+	height:464px;
+	position:relative;
+	overflow:hidden;
+	word-wrap: break-word;
+}
+.aboutimg{
+	float:left;
+}
+#makekora{
+	position:absolute;
+	top:250px;
+	left:123.5px;
+	z-index:100;
+}
+
+#resultDisplay{
+	width:960px;
+	background-color:#3997b2;
+}
+
+#resultDisplayRight{
+	float:left;
+	width:65px;
+	height:68px;
+	background-color:#3997b2;
+	border-top:10px solid #FFF;
+	border-right:10px solid #086984;
+}
+#resultDisplayLeft{
+	float:right;
+	width:65px;
+	height:68px;
+	background-color:#3997b2;
+	border-top:10px solid #FFF;
+	border-left:10px solid #086984;
+}
+#resultDisplayRightBottom{
+	float:left;
+	width:65px;
+	height:1px;
+	border-top:10px solid #086984;
+	border-right:10px solid #FFF;
+}
+#resultDisplayLeftTop{
+	float:right;
+	width:65px;
+	height:1px;
+	border-top:10px solid #086984;
+	border-left:10px solid #FFF;
+}
+
+#tweet{
+	width:400px;
+	height:75px;
+	border-right:10px solid #086984;
+	border-left:10px solid #8CCDE0;
+	border-top:10px solid #8CCDE0;
+	border-bottom:10px solid #086984;
+	position:relative;
+}
+
+#sakusei{
+	width:400px;
+	height:75px;
+	background-image:url(../img/sakusei.png);
+	border-right:10px solid #086984;
+	border-left:10px solid #8CCDE0;
+	border-top:10px solid #8CCDE0;
+	border-bottom:10px solid #086984;
+	overflow:hidden;
+	position:relative;
+	display:none;
+}
